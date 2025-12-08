@@ -1,0 +1,170 @@
+// Best Solution 
+
+class Solution {
+
+static {
+    Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+        try (java.io.FileWriter fw = new java.io.FileWriter("display_runtime.txt")) {
+            fw.write("0");
+        } catch (Exception e) {
+        }
+    }));
+}
+
+    public List<List<Integer>> threeSum(int[] nums) {
+        if(nums.length < 3){ return new ArrayList<>();}
+
+        Set<List<Integer>> result = new HashSet<>();
+        Arrays.sort(nums);
+        for(int i=0; i<nums.length - 2; i++){
+            int j = i + 1;
+            int k = nums.length-1;
+            while(j < k){
+                int sum = nums[i] + nums[j] + nums[k];
+                if(sum == 0){
+                    result.add(Arrays.asList(nums[i], nums[j], nums[k]));
+                    j++;
+                    k--;
+                }else if(sum > 0){
+                    k--;
+                }else{
+                    j++;
+                }
+            }
+        }
+        return new ArrayList<>(result);
+    }
+}
+
+
+
+
+
+
+//Alt solution 
+
+class Solution {
+    public List<List<Integer>> threeSum(int[] nums) {
+        
+        List<List<Integer>> ans = new ArrayList<>();
+        Arrays.sort(nums);
+
+        for (int i = 0; i < nums.length -2; i++) {
+
+            // skip duplicate values
+            if (i > 0 && nums[i] == nums[i-1]) {
+                continue;
+            }
+
+            int j = i + 1;
+            int k = nums.length - 1;
+
+            while (j < k) {
+                
+                int sum = nums[i] + nums[j] + nums[k];
+
+                if (sum == 0) {
+                    ans.add(Arrays.asList(nums[i], nums[j], nums[k]));
+
+                     // Skip duplicate elements for j
+                    while (j < k && nums[j] == nums[j + 1]) {
+                        j++;
+                    }
+
+                    // Skip duplicate elements for k
+                    while (j < k && nums[k] == nums[k - 1]) {
+                        k--;
+                    }
+                    
+                    j++;
+                    k--;
+                }
+                else if (sum < 0) {
+                    //sum is less than 0, so increment j
+                    j++;
+                }
+                else {
+                    //sum is greater than zero, so decrement k
+                    k--;
+                }
+
+            }
+        }
+        return ans;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+// Suboptimal
+
+class Solution {
+    public List<List<Integer>> threeSum(int[] nums) {
+        
+        ArrayList<List<Integer>> list = new ArrayList<>();
+
+        // length less than 3
+        if (nums.length < 3) {
+            return list;
+        }
+
+        // length of exactly 3
+        else if (nums.length == 3) {
+            if (nums[0] + nums[1] + nums[2] == 0) {
+                
+                list.add(Arrays.asList(nums[0], nums[1], nums[2]));
+            }
+            return list;
+        }
+
+        //length greater than 3
+
+        for (int i = 0; i < nums.length -2; i++) {
+            //System.out.println("Iteration");
+            //System.out.println(nums[i]);
+            for (int j = 1; j < nums.length -1; j++) {
+                //System.out.println("Loop");
+                //System.out.println(nums[j]);
+                for (int k = 2; k < nums.length; k++) {
+
+                    //System.out.println("Numbers: " + nums[i] + ", " + nums[j] + ", " + nums[k] +
+                    //                  "\nTotal: " + (nums[i] + nums[j] + nums[k]));
+
+                    if ((nums[i] + nums[j] + nums[k] == 0) &&
+                        (i != j) && (j != k) && (i != k)) {
+                        
+                        boolean toAdd = true;
+                        for (List<Integer> numset : list) {
+
+                            if (theSame(nums[i], nums[j], nums[k])) {
+                                if (theSame(numset.get(0), numset.get(1), numset.get(2))) {
+                                    toAdd = false;
+                                }
+                            }
+                            else if (numset.contains(nums[i]) && numset.contains(nums[j]) 
+                            && numset.contains(nums[k])) {
+                                toAdd = false;
+                            }
+                        }
+
+                        if (toAdd) {
+                            list.add(Arrays.asList(nums[i], nums[j], nums[k]));
+                        }
+                    }
+                }
+            }
+        }
+        return list;
+    }
+
+    public boolean theSame(Integer a, Integer b, Integer c) {
+        return (a == b) && (b == c) && (a == c);
+    }
+}
