@@ -1,0 +1,123 @@
+125. Valid Palindrome
+Solved
+Easy
+Topics
+premium lock iconCompanies
+
+A phrase is a palindrome if, after converting all uppercase letters into lowercase letters and removing all non-alphanumeric characters, it reads the same forward and backward. Alphanumeric characters include letters and numbers.
+
+Given a string s, return true if it is a palindrome, or false otherwise.
+
+ 
+
+Example 1:
+
+Input: s = "A man, a plan, a canal: Panama"
+Output: true
+Explanation: "amanaplanacanalpanama" is a palindrome.
+
+Example 2:
+
+Input: s = "race a car"
+Output: false
+Explanation: "raceacar" is not a palindrome.
+
+Example 3:
+
+Input: s = " "
+Output: true
+Explanation: s is an empty string "" after removing non-alphanumeric characters.
+Since an empty string reads the same forward and backward, it is a palindrome.
+
+ 
+
+Constraints:
+
+    1 <= s.length <= 2 * 105
+    s consists only of printable ASCII characters.
+
+
+
+
+class Solution {
+    public boolean isPalindrome(String s) {
+        String cleaned = s.replaceAll("[^a-zA-Z0-9]","");
+        cleaned = cleaned.toLowerCase();
+        int n = cleaned.length();
+        if(n <= 1) return true;
+        return palindrome(0, cleaned , n);
+    }
+    static boolean palindrome(int i, String s, int n){
+        if(i >= n/2) return true;
+        if(s.charAt(i) != s.charAt(n-i-1)){
+            return false;
+        }
+        return palindrome(i+1,s,n);
+    }
+  }
+}
+
+
+
+
+
+
+
+
+
+class Solution {
+    public boolean isPalindrome(String s) {
+        s = s.replaceAll("[^a-zA-Z0-9]","").toLowerCase();
+        int start =0;
+        int end = s.length()-1;
+
+        while(start<end){
+            if(s.charAt(start)!=s.charAt(end)){
+                return false;
+            }
+                start++;
+                end--;
+            
+        }
+        return true;
+    }
+}
+
+
+
+
+
+
+class Solution {
+    public boolean isPalindrome(String s) {
+        
+        if (s.length() == 0 || s.length() == 1) {
+            return true;
+        }
+
+        String newString = s.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
+
+        int mid;
+        String palindrome = "";
+
+        if (newString.length() % 2 == 0) {
+            mid = newString.length()/2;
+
+            for (int i = newString.length()-1; i >= mid; i--) {
+                palindrome += newString.charAt(i);
+            }
+
+            return (newString.substring(0, mid).equals(palindrome)) ? true : false;
+            // substring second param is non-inclusive
+        }
+        else {
+            mid = (newString.length()-1)/2;
+
+            for (int i = newString.length()-1; i > mid; i--) {
+                palindrome += newString.charAt(i);
+            }
+
+            return (newString.substring(0, mid).equals(palindrome)) ? true : false;
+        }
+    }
+}
