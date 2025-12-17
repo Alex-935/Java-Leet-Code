@@ -26,3 +26,116 @@ Explanation: There are three ways to climb to the top.
 1. 1 step + 1 step + 1 step
 2. 1 step + 2 steps
 3. 2 steps + 1 step
+
+
+
+
+
+Intuition - PLEASE READ
+
+    You are climbing a staircase. Each time you can either climb 1 or 2 steps. When you take one step, the value of n will be reduced to n-1 and similarly if you take 2 steps it will reduce to n-2. Thus finding the number of ways becomes same as the finding the nth fibonacci number.
+    The dynamic programming approach to solving the climbing stairs problem works by breaking down the problem into smaller subproblems, and then solving the smaller subproblems recursively. The solution to the original problem is then calculated by combining the solutions to the smaller subproblems.
+
+Approach 1: Memoization
+
+    Initialize an array of size n+1 and fill with default values that can never be the answer. Or you can take a hashmap accordingly.
+    Initialize the base conditions of the recursion function. If there are no steps involved, the no. of ways will be only 1. Similarly if there is only one step involved the no. of ways will be 1 too.
+    The solution to the original problem is then calculated by adding the number of ways to climb n-1 stairs to the number of ways to climb n-2 stairs.
+
+Complexity
+
+    Time complexity: O(n)
+
+    Space complexity: O(n)
+
+Code
+
+class Solution {
+    public int climbStairs(int n) {
+        int[] dp = new int[n+1];
+        Arrays.fill(dp,-1);
+        int k = climbStairsHelper(n,dp);
+        return k;
+    }
+    public int climbStairsHelper(int n, int[] dp){
+        if(n <= 1) return 1;
+        if(dp[n] != -1) return dp[n];
+        dp[n] = climbStairsHelper(n-1,dp) + 
+                climbStairsHelper(n-2,dp);
+        return dp[n];
+    }
+}
+
+
+
+Approach 2: Tabulation
+
+Presentation1.gif
+
+The table is initialized with the solutions to the smallest subproblems, which are the following:
+
+tab[0] = 1; 
+#There is only one way to climb 0 stairs, which is to do nothing.
+
+tab[1] = 1; 
+#There is only one way to climb 1 stair, which is to take one step.
+
+For all other values of i, the solution to the subproblem is calculated as follows:
+
+tab[i] = tab[i - 1] + tab[i - 2]
+
+This is because there are two ways to climb i stairs: either take one step from the current stair, or take two steps from the current stair.
+
+Once the table has been populated with the solutions to all of the subproblems, the solution to the original problem can be calculated by simply looking up the value in the table at the index n, where n is the number of stairs.
+
+This approach is efficient because it avoids solving the same subproblems multiple times. The table stores the solutions to all of the subproblems, so that they can be reused when solving the larger subproblems.
+Complexity
+
+    Time complexity: O(n)
+
+    Space complexity: O(n)
+
+Code
+
+class Solution {
+    public int climbStairs(int n) {
+        int[] tab = new int[n+1];
+        if(tab.length > 0) tab[0] = 1;
+        if(tab.length > 1) tab[1] = 1;
+        for(int i = 2; i < tab.length; i++) 
+            tab[i] = tab[i-1] + tab[i-2];
+        return tab[n];
+    }
+}
+
+
+
+Approach 3: Space Optimization
+
+Lets observe the pattern in Tabulation.
+
+    The newer is always the summation of the previous two values.
+    The older values are then never utilized. Thus the space is wasted in longer run.
+    We can achieve similar effect with just three variables and shifting the values once calculated.
+    Presentation2.gif
+
+Complexity
+
+    Time complexity: O(n)
+
+    Space complexity: O(1)
+
+Code
+
+class Solution {
+    public int climbStairs(int n) {
+        if(n <= 1) return 1;
+        int firstNum = 1, secondNum = 1, thirdNum = 0;
+        for(int i = 2; i < n + 1; i++){
+            thirdNum = firstNum + secondNum;
+            firstNum = secondNum;
+            secondNum = thirdNum;
+        }
+        return thirdNum;
+    }
+}
